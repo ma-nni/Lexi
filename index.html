@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:wght@300;400&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1a2e;
+    --soft: #4a4a6a;
+    --blush: #e8c4c4;
+    --pale: #f7f0f0;
+    --gold: #c9a96e;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--pale);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Floating petals background */
+  .petals {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: var(--blush);
+    border-radius: 50% 0 50% 0;
+    opacity: 0;
+    animation: fall linear infinite;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 0.6; }
+    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+  }
+
+  .petal:nth-child(1) { left: 10%; animation-duration: 8s; animation-delay: 0s; width: 6px; height: 6px; }
+  .petal:nth-child(2) { left: 25%; animation-duration: 11s; animation-delay: 2s; width: 10px; height: 10px; }
+  .petal:nth-child(3) { left: 40%; animation-duration: 9s; animation-delay: 4s; }
+  .petal:nth-child(4) { left: 60%; animation-duration: 12s; animation-delay: 1s; width: 5px; height: 5px; }
+  .petal:nth-child(5) { left: 75%; animation-duration: 10s; animation-delay: 3s; width: 9px; height: 9px; }
+  .petal:nth-child(6) { left: 88%; animation-duration: 8s; animation-delay: 5s; width: 6px; height: 6px; }
+  .petal:nth-child(7) { left: 50%; animation-duration: 13s; animation-delay: 6s; }
+  .petal:nth-child(8) { left: 15%; animation-duration: 9s; animation-delay: 7s; width: 7px; height: 7px; }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 80px 32px 120px;
+  }
+
+  /* Opening */
+  .opening {
+    text-align: center;
+    margin-bottom: 72px;
+  }
+
+  .eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .opening h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(48px, 10vw, 80px);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 24px;
+  }
+
+  .divider {
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+    margin: 0 auto;
+  }
+
+  /* Paragraphs */
+  .letter {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+
+  .stanza {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .stanza.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .stanza p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 3vw, 22px);
+    line-height: 1.8;
+    color: var(--soft);
+    max-width: 60ch;
+  }
+
+  .stanza p em {
+    font-style: italic;
+    color: var(--ink);
+  }
+
+  .stanza.highlight p {
+    font-size: clamp(20px, 3.5vw, 26px);
+    color: var(--ink);
+    font-style: italic;
+    border-left: 2px solid var(--gold);
+    padding-left: 24px;
+  }
+
+  /* Closing */
+  .closing {
+    text-align: center;
+    margin-top: 72px;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
+  }
+
+  .closing.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .closing p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(14px, 2.5vw, 17px);
+    color: var(--soft);
+    line-height: 1.8;
+    max-width: 52ch;
+    margin: 0 auto 32px;
+  }
+
+  .signature {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 5vw, 40px);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--gold);
+  }
+
+  @media (max-width: 480px) {
+    .wrapper { padding: 60px 24px 80px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="petals">
+  <div class="petal"></div>
+  <div class="petal"></div>
+  <div class="petal"></div>
+  <div class="petal"></div>
+  <div class="petal"></div>
+  <div class="petal"></div>
+  <div class="petal"></div>
+  <div class="petal"></div>
+</div>
+
+<div class="wrapper">
+
+  <div class="opening">
+    <span class="eyebrow">A letter, from the heart</span>
+    <h1>For you,<br>only you</h1>
+    <div class="divider"></div>
+  </div>
+
+  <div class="letter">
+
+    <div class="stanza">
+      <p>I find reasons just to see you — because <em>one smile from you makes my entire day.</em> The way you wave and say hi with that smile... nothing in this world is more beautiful than that moment.</p>
+    </div>
+
+    <div class="stanza highlight">
+      <p>You're not like other girls who carry attitude all the time. The way you came up to me at the bar — your eyes were telling me you were genuinely happy to see me.</p>
+    </div>
+
+    <div class="stanza">
+      <p>I love your eye color. Your smile. The way your lips move when you talk. I always get lost in your eyes. And I notice the little things — like today while we were playing pool, your pupils were slightly bigger than normal. It made your eyes even more beautiful. I wanted to keep looking at them, but I didn't want to make you uncomfortable.</p>
+    </div>
+
+    <div class="stanza highlight">
+      <p>I feel happy when you are around me. You give the most positive energy.</p>
+    </div>
+
+    <div class="stanza">
+      <p>I could write a whole essay about what I love about you, but I struggle to say it directly — because I've never actually approached a girl in my life. My only girlfriend was the one who approached me first. So everything I'm saying to you right now... this is me stepping way outside my comfort zone, because <em>you're worth it.</em></p>
+    </div>
+
+    <div class="stanza">
+      <p>I love the way you speak — your voice is so soft. If I could have a voice note from you, it would be my alarm every morning. And the way you look when you talk... I could listen and watch forever.</p>
+    </div>
+
+    <div class="stanza highlight">
+      <p>Your grey eyes are unlike anything I've ever seen — better than blue, better than anything. When I look into them, I forget everything. Yesterday I was so stressed, but the moment I saw you, everything just... disappeared.</p>
+    </div>
+
+    <div class="stanza">
+      <p>Do you remember the first time I saw you? I was just standing there, staring — because I was shocked. Shocked because you looked exactly like my imaginary dream girl. I couldn't believe it. I was already lost before I even spoke a word.</p>
+    </div>
+
+    <div class="stanza highlight">
+      <p>I was desperately trying to find a reason to talk to you. And the best I could come up with was... <em>"Hey, do you have a charger?" 😂</em></p>
+    </div>
+
+    <div class="stanza">
+      <p>But instead of ignoring me or giving me attitude like most people would — you said you didn't have the right charger, and then you offered to go buy one for me. We had just met. I was a complete stranger. And you still offered to do that. That moment told me everything about the kind of person you are. <em>That's how beautiful your heart is.</em></p>
+    </div>
+
+    <div class="stanza highlight">
+      <p>And I know you can never be mine. But that doesn't mean I should stop loving you.</p>
+    </div>
+
+    <div class="stanza">
+      <p>All I ask is — please don't count me with other boys. I have never imagined you in the wrong way. Not even once. I always imagined you as a life partner, and a beautiful life together. And I could tell you every single thing I imagined, if you'd let me.</p>
+    </div>
+
+  </div>
+
+  <div class="stanza" style="text-align:center; margin-top: 48px;">
+    <p style="max-width: 60ch; margin: 0 auto; font-family: 'Cormorant Garamond', serif; font-size: clamp(18px, 3vw, 22px); line-height: 1.8; color: #4a4a6a;">I will never force you to love me back. I'll just keep loving you quietly, in the hope that maybe someday you will be mine forever. And in that hope, I'll wait in the corner — until the day you walk down the aisle with someone else. Even then, I won't go looking for anyone. I'll just accept whatever life brings after that. 🥲</p>
+  </div>
+
+  <div class="closing">
+    <p>Your smile reaches your eyes. That tells me it's always real.<br>And that's exactly why I love you.</p>
+    <div class="divider" style="margin-bottom: 32px;"></div>
+    <span class="signature">— Manpreet</span>
+  </div>
+
+</div>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.stanza, .closing').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
